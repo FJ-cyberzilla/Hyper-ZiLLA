@@ -1,0 +1,260 @@
+<!-- ~/HyperZilla/COMMAND_CENTER/templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐲 HYPER-ZILLA COMMAND CENTER</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/command_center.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- BATTLE-STATIONS HEADER -->
+    <header class="battle-stations-header">
+        <div class="header-left">
+            <div class="logo">
+                <span class="logo-icon">🐲</span>
+                <span class="logo-text">HYPER-ZILLA COMMAND</span>
+            </div>
+            <div class="operational-status">
+                <span class="status-indicator" id="statusIndicator"></span>
+                <span class="status-text" id="statusText">BATTLE STATIONS</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="system-health">
+                <span class="health-label">SYSTEM HEALTH:</span>
+                <div class="health-bar">
+                    <div class="health-fill" id="healthFill"></div>
+                </div>
+                <span class="health-percent" id="healthPercent">95%</span>
+            </div>
+            <div class="datetime" id="currentDateTime"></div>
+        </div>
+    </header>
+
+    <!-- MAIN COMMAND GRID -->
+    <main class="command-grid">
+        <!-- SIDE NAVIGATION -->
+        <nav class="command-nav">
+            <div class="nav-section">
+                <h3>INTELLIGENCE</h3>
+                <button class="nav-btn active" data-panel="intelligence">
+                    <i class="fas fa-binoculars"></i>
+                    OSINT Collection
+                </button>
+                <button class="nav-btn" data-panel="threat">
+                    <i class="fas fa-shield-alt"></i>
+                    Threat Analysis
+                </button>
+                <button class="nav-btn" data-panel="correlation">
+                    <i class="fas fa-project-diagram"></i>
+                    Data Correlation
+                </button>
+            </div>
+
+            <div class="nav-section">
+                <h3>OPERATIONS</h3>
+                <button class="nav-btn" data-panel="missions">
+                    <i class="fas fa-rocket"></i>
+                    Mission Control
+                </button>
+                <button class="nav-btn" data-panel="evasion">
+                    <i class="fas fa-user-secret"></i>
+                    Evasion Systems
+                </button>
+                <button class="nav-btn" data-panel="agents">
+                    <i class="fas fa-robot"></i>
+                    Agent Management
+                </button>
+            </div>
+
+            <div class="nav-section">
+                <h3>MONITORING</h3>
+                <button class="nav-btn" data-panel="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    System Dashboard
+                </button>
+                <button class="nav-btn" data-panel="logs">
+                    <i class="fas fa-clipboard-list"></i>
+                    Operation Logs
+                </button>
+                <button class="nav-btn" data-panel="alerts">
+                    <i class="fas fa-bell"></i>
+                    Threat Alerts
+                </button>
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="content-area">
+            <!-- INTELLIGENCE PANEL -->
+            <div id="intelligence-panel" class="content-panel active">
+                <div class="panel-header">
+                    <h2><i class="fas fa-binoculars"></i> OSINT INTELLIGENCE COLLECTION</h2>
+                    <div class="panel-actions">
+                        <button class="btn-primary" onclick="startOSINTCollection()">
+                            <i class="fas fa-play"></i> Start Collection
+                        </button>
+                        <button class="btn-secondary" onclick="showCollectionSettings()">
+                            <i class="fas fa-cog"></i> Settings
+                        </button>
+                    </div>
+                </div>
+
+                <div class="intelligence-grid">
+                    <!-- TARGET INPUT -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Target Specification</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="targetInput">Target URL/Username/Domain:</label>
+                                <input type="text" id="targetInput" placeholder="https://example.com or @username" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="collectionDepth">Collection Depth:</label>
+                                <select id="collectionDepth" class="form-control">
+                                    <option value="BASIC">Basic Scan</option>
+                                    <option value="STANDARD">Standard Analysis</option>
+                                    <option value="DEEP">Deep Dive</option>
+                                    <option value="COMPREHENSIVE">Comprehensive Intelligence</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Intelligence Types:</label>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" name="intelTypes" value="SOCIAL" checked> Social Media</label>
+                                    <label><input type="checkbox" name="intelTypes" value="TECHNICAL" checked> Technical</label>
+                                    <label><input type="checkbox" name="intelTypes" value="ENTERPRISE"> Enterprise</label>
+                                    <label><input type="checkbox" name="intelTypes" value="PHYSICAL"> Physical</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REAL-TIME PROGRESS -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Collection Progress</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="collectionProgress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                                </div>
+                                <div class="progress-stats">
+                                    <span id="progressText">Ready to start collection</span>
+                                    <span id="progressPercent">0%</span>
+                                </div>
+                            </div>
+                            <div id="collectionMetrics" class="metrics-grid">
+                                <div class="metric">
+                                    <span class="metric-value" id="sourcesScanned">0</span>
+                                    <span class="metric-label">Sources Scanned</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value" id="dataCollected">0</span>
+                                    <span class="metric-label">Data Points</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value" id="evasionSuccess">100%</span>
+                                    <span class="metric-label">Evasion Rate</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RESULTS DISPLAY -->
+                    <div class="card full-width">
+                        <div class="card-header">
+                            <h3>Intelligence Results</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="results-tabs">
+                                <button class="tab-btn active" data-tab="summary">Summary</button>
+                                <button class="tab-btn" data-tab="social">Social Intelligence</button>
+                                <button class="tab-btn" data-tab="technical">Technical Data</button>
+                                <button class="tab-btn" data-tab="threats">Threat Assessment</button>
+                            </div>
+                            <div id="resultsContent" class="results-content">
+                                <div id="summary-tab" class="tab-content active">
+                                    <p>No data collected yet. Start a collection mission to see results.</p>
+                                </div>
+                                <!-- Other tabs will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OTHER PANELS WILL BE SIMILARLY STRUCTURED -->
+            <div id="threat-panel" class="content-panel">
+                <!-- Threat Analysis Interface -->
+            </div>
+            
+            <div id="missions-panel" class="content-panel">
+                <!-- Mission Control Interface -->
+            </div>
+            
+            <!-- ... more panels ... -->
+        </div>
+
+        <!-- RIGHT SIDEBAR - REAL-TIME MONITORING -->
+        <aside class="monitoring-sidebar">
+            <div class="sidebar-section">
+                <h3>ACTIVE MISSIONS</h3>
+                <div id="activeMissionsList" class="missions-list">
+                    <!-- Active missions will appear here -->
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>SYSTEM ALERTS</h3>
+                <div id="alertsList" class="alerts-list">
+                    <!-- System alerts will appear here -->
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>PERFORMANCE METRICS</h3>
+                <div class="metrics-panel">
+                    <div class="metric-item">
+                        <span class="metric-name">CPU Load</span>
+                        <div class="metric-bar">
+                            <div class="metric-fill" id="cpuLoad" style="width: 45%"></div>
+                        </div>
+                        <span class="metric-value">45%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-name">Memory Usage</span>
+                        <div class="metric-bar">
+                            <div class="metric-fill" id="memoryUsage" style="width: 62%"></div>
+                        </div>
+                        <span class="metric-value">62%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-name">Network I/O</span>
+                        <div class="metric-bar">
+                            <div class="metric-fill" id="networkIO" style="width: 28%"></div>
+                        </div>
+                        <span class="metric-value">28%</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- MODALS -->
+    <div id="missionModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Mission Configuration</h3>
+            <!-- Mission configuration form -->
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/command_center.js') }}"></script>
+</body>
+</html>
