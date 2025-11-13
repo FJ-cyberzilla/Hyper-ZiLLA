@@ -194,21 +194,21 @@ class HyperZillaUI {
             <div class="summary-grid">
                 <div class="summary-item">
                     <h4>Target Identified</h4>
-                    <p>${results.target || 'Unknown'}</p>
+                    <p>${escapeHTML(results.target ?? 'Unknown')}</p>
                 </div>
                 <div class="summary-item">
                     <h4>Confidence Level</h4>
-                    <p class="confidence-high">${results.confidence || 'High'}%</p>
+                    <p class="confidence-high">${escapeHTML(results.confidence ?? 'High')}%</p>
                 </div>
                 <div class="summary-item">
                     <h4>Threat Level</h4>
-                    <p class="threat-low">${results.threat_level || 'Low'}</p>
+                    <p class="threat-low">${escapeHTML(results.threat_level ?? 'Low')}</p>
                 </div>
                 <div class="summary-item full-width">
                     <h4>Key Findings</h4>
                     <ul>
-                        ${(results.key_findings || []).map(finding => 
-                            `<li>${finding}</li>`
+                        ${(results.key_findings || []).map(finding =>
+                            `<li>${escapeHTML(finding)}</li>`
                         ).join('')}
                     </ul>
                 </div>
