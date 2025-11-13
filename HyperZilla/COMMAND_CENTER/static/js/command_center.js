@@ -1,4 +1,15 @@
 // ~/HyperZilla/COMMAND_CENTER/static/js/command_center.js
+
+// Basic HTML escaping utility for DOM XSS protection
+function escapeHTML(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 class HyperZillaUI {
     constructor() {
         this.currentPanel = 'intelligence';
@@ -211,7 +222,7 @@ class HyperZillaUI {
         alert.className = `alert alert-${type}`;
         alert.innerHTML = `
             <span class="alert-icon">${this.getAlertIcon(type)}</span>
-            <span class="alert-message">${message}</span>
+            <span class="alert-message">${escapeHTML(message)}</span>
             <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
         `;
         
