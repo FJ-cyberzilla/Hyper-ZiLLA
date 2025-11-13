@@ -146,7 +146,7 @@ class HyperZillaFacialAI:
                 results = await osint_bridge.search_social_media(query)
                 profiles.extend(results.get('profiles', []))
             except Exception as e:
-                print(f"Social media search error for {query}: {e}")
+                print(f"Social media search error: {e}")
         
         return profiles
     
