@@ -1,4 +1,4 @@
-name: "CodeQL Advanced - Fixed"
+name: "CodeQLp"
 
 on:
   push:
