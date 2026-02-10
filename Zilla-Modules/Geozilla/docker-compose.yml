@@ -1,0 +1,36 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  cognizilla:
+    build: .
+    container_name: cognizilla-monster
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      - COGNIZILLA_MODE=sovereign
+      - QUANTUM_ENCRYPTION=true
+      - FJ_CYBERZILLA_KEY=${FJ_CYBERZILLA_KEY}
+    volumes:
+      - ./configuration/quantum-keys:/quantum-keys:ro
+      - ./data:/data:rw
+    restart: unless-stopped
+    networks:
+      - cognizilla-net
+
+  # Optional: Redis for session management
+  redis:
+    image: redis:7-alpine
+    container_name: cognizilla-redis
+    restart: unless-stopped
+    networks:
+      - cognizilla-net
+
+networks:
+  cognizilla-net:
+    driver: bridge
+
+volumes:
+  data:
+    driver: local

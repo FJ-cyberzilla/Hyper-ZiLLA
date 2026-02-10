@@ -1,0 +1,29 @@
+performance:
+  memory:
+    max_heap_size: "4GB"
+    gc_interval: 30000
+    leak_detection: true
+    cache_ttl: 3600000
+    
+  cpu:
+    max_utilization: 85
+    thread_pool_size: 4
+    priority: "high"
+    
+  network:
+    max_concurrent_requests: 10
+    request_timeout: 30000
+    retry_attempts: 3
+    
+  stealth:
+    browser_instances: 3
+    request_delay:
+      min: 1000
+      max: 5000
+    fingerprint_rotation: 300000
+    
+  optimization:
+    enable_compression: true
+    enable_caching: true
+    enable_compilation: true
+    isolate_heavy_operations: true

@@ -1,0 +1,16 @@
+[
+    {
+        "file_path": "test_file.py",
+        "language": "Python",
+        "success": false,
+        "errors": [
+            "[pylint] [",
+            "[pylint]     {",
+            "[pylint]         \"type\": \"convention\",",
+            "[pylint]         \"module\": \"test_file\",",
+            "[pylint]         \"obj\": \"\","
+        ],
+        "warnings": [],
+        "was_fixed": false
+    }
+]

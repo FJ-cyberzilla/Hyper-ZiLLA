@@ -1,0 +1,29 @@
+# requirements-worker.txt
+
+# Include all base requirements
+-r requirements.txt
+
+# Additional ML Dependencies
+torchvision==0.16.1
+opencv-python==4.8.1.78
+pillow==10.3.0
+matplotlib==3.8.2
+seaborn==0.13.0
+
+# Advanced NLP
+spacy==3.7.2
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.0/en_core_web_sm-3.7.0.tar.gz
+stanza==1.6.1
+gensim==4.3.2
+
+# Computer Vision
+opencv-python-headless==4.8.1.78
+Pillow==10.3.0
+
+# Message Queues
+celery==5.3.4
+kombu==5.3.4
+
+# GPU Support (optional)
+# torch==2.1.1+cu121 -f https://download.pytorch.org/whl/torch_stable.html
+# torchvision==0.16.1+cu121 -f https://download.pytorch.org/whl/torch_stable.html

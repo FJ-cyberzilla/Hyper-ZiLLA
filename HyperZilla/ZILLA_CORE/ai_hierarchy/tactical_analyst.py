@@ -1,86 +1,114 @@
-# ~/HyperZilla/ZILLA_CORE/ai_hierarchy/tactical_analyst.py
-import asyncio
+"""
+Hyper-ZiLLA Tactical Analyst AI
+Strategic analysis and decision support system
+"""
+
+import logging
+from typing import Dict, List, Any
 from datetime import datetime
-from typing import Dict, List
-import numpy as np
+
 
 class TacticalAnalyst:
-    def __init__(self, analyst_id: str, specialization: str):
-        self.analyst_id = analyst_id
-        self.specialization = specialization  # DIGITAL, PHYSICAL, ENTERPRISE
-        self.analysis_queue = asyncio.Queue()
-        self.performance_metrics = {
-            'analysis_speed': 0.0,
-            'accuracy': 0.0,
-            'threats_identified': 0
-        }
-    
-    async def analyze_intelligence(self, intel_package: Dict) -> Dict:
-        """Specialized intelligence analysis based on type"""
-        start_time = datetime.now()
-        
-        if self.specialization == "DIGITAL":
-            analysis = await self._analyze_digital_intel(intel_package)
-        elif self.specialization == "PHYSICAL":
-            analysis = await self._analyze_physical_intel(intel_package)
-        elif self.specialization == "ENTERPRISE":
-            analysis = await self._analyze_enterprise_intel(intel_package)
-        
-        # Update performance metrics
-        self._update_metrics(start_time, analysis.get('confidence', 0.0))
-        
-        return analysis
-    
-    async def _analyze_digital_intel(self, intel: Dict) -> Dict:
-        """Deep analysis of digital footprint"""
-        # Your existing correlation engine capabilities
-        behavioral_patterns = self._extract_behavioral_patterns(intel)
-        network_relationships = self._map_relationships(intel)
-        threat_indicators = self._identify_threat_indicators(intel)
-        
-        return {
-            'analyst_id': self.analyst_id,
-            'analysis_type': 'DIGITAL_BEHAVIORAL',
-            'confidence': self._calculate_confidence(intel),
-            'behavioral_patterns': behavioral_patterns,
-            'network_analysis': network_relationships,
-            'threat_assessment': threat_indicators,
-            'timestamp': datetime.now().isoformat()
-        }
-    
-    async def _analyze_physical_intel(self, intel: Dict) -> Dict:
-        """Analysis of physical sensor data"""
-        movement_patterns = self._analyze_movement(intel)
-        location_correlation = self._correlate_locations(intel)
-        sensor_anomalies = self._detect_sensor_anomalies(intel)
-        
-        return {
-            'analyst_id': self.analyst_id,
-            'analysis_type': 'PHYSICAL_TRACKING',
-            'confidence': self._calculate_spatial_confidence(intel),
-            'movement_analysis': movement_patterns,
-            'location_intel': location_correlation,
-            'sensor_anomalies': sensor_anomalies
+    """Tactical AI for strategic analysis and decision support"""
+
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        self.analysis_cache = {}
+        self.decision_history = []
+
+    def analyze_threat(self, threat_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Analyze threat using proprietary AI algorithms"""
+        self.logger.info("🔍 Analyzing threat with proprietary AI")
+
+        analysis = {
+            "risk_level": self._calculate_risk_level(threat_data),
+            "recommended_actions": self._generate_actions(threat_data),
+            "confidence_score": self._calculate_confidence(threat_data),
+            "analysis_timestamp": datetime.now().isoformat(),
+            "ai_model": "Hyper-ZiLLA_Threat_Analysis_v1",
         }
 
-# Analyst Pool Manager
-class AnalystPool:
-    def __init__(self):
-        self.analysts = {
-            'DIGITAL': [TacticalAnalyst(f"DA{i}", "DIGITAL") for i in range(4)],
-            'PHYSICAL': [TacticalAnalyst(f"PA{i}", "PHYSICAL") for i in range(3)],
-            'ENTERPRISE': [TacticalAnalyst(f"EA{i}", "ENTERPRISE") for i in range(3)]
-        }
-    
-    async def dispatch_analysis(self, intel_type: str, data: Dict) -> List[Dict]:
-        """Dispatch analysis to appropriate analysts"""
-        analysts = self.analysts.get(intel_type, [])
-        
-        if not analysts:
-            return []
-        
-        # Parallel analysis for comprehensive coverage
-        analysis_tasks = [analyst.analyze_intelligence(data) for analyst in analysts[:2]]
-        results = await asyncio.gather(*analysis_tasks)
-        
-        return results
+        # Cache analysis
+        threat_id = hash(str(threat_data))
+        self.analysis_cache[threat_id] = analysis
+        self.decision_history.append(analysis)
+
+        return analysis
+
+    def _calculate_risk_level(self, threat_data: Dict[str, Any]) -> str:
+        """Calculate risk level using custom AI logic"""
+        severity = threat_data.get("severity", 0)
+        frequency = threat_data.get("frequency", 0)
+        impact = threat_data.get("impact", 0)
+
+        risk_score = (severity * 0.4) + (frequency * 0.3) + (impact * 0.3)
+
+        if risk_score >= 8:
+            return "CRITICAL"
+        elif risk_score >= 6:
+            return "HIGH"
+        elif risk_score >= 4:
+            return "MEDIUM"
+        elif risk_score >= 2:
+            return "LOW"
+        else:
+            return "INFO"
+
+    def _generate_actions(self, threat_data: Dict[str, Any]) -> List[str]:
+        """Generate recommended actions using AI decision making"""
+        risk_level = self._calculate_risk_level(threat_data)
+        actions = []
+
+        if risk_level in ["CRITICAL", "HIGH"]:
+            actions.extend(
+                [
+                    "Immediate system isolation",
+                    "Enhanced monitoring activated",
+                    "Threat hunting initiated",
+                ]
+            )
+
+        if threat_data.get("data_breach_risk", False):
+            actions.append("Data encryption and backup verification")
+
+        if threat_data.get("network_intrusion", False):
+            actions.append("Network segmentation review")
+
+        return actions if actions else ["Continue monitoring - no immediate action required"]
+
+    def _calculate_confidence(self, threat_data: Dict[str, Any]) -> float:
+        """Calculate AI confidence score"""
+        # Custom confidence calculation logic
+        base_confidence = 0.7
+
+        # Adjust based on data quality
+        if threat_data.get("verified", False):
+            base_confidence += 0.2
+
+        if threat_data.get("multiple_sources", False):
+            base_confidence += 0.1
+
+        return min(base_confidence, 1.0)
+
+    def get_analysis_history(self) -> List[Dict[str, Any]]:
+        """Get history of all analyses performed"""
+        return self.decision_history.copy()
+
+
+# For backward compatibility
+tactical_analyst = TacticalAnalyst()
+
+if __name__ == "__main__":
+    analyst = TacticalAnalyst()
+
+    test_threat = {
+        "severity": 8,
+        "frequency": 3,
+        "impact": 9,
+        "data_breach_risk": True,
+        "network_intrusion": False,
+        "verified": True,
+    }
+
+    analysis = analyst.analyze_threat(test_threat)
+    print("Threat Analysis:", analysis)

@@ -1,0 +1,12 @@
+{
+  "name": "cognizilla",
+  "version": "1.0.0-sovereign",
+  "description": "Uncloneable AI Cyber Monster - Exclusive to FJ-Cyberzilla",
+  "author": "FJ-Cyberzilla <fj-cyberzilla@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FJ-cyberzilla/cognizilla.git"
+  },
+  "private": true,
+  "license": "PROPRIETARY"
+}

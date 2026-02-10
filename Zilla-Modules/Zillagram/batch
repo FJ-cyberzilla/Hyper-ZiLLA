@@ -1,0 +1,110 @@
+@echo off
+chcp 65001 >nul
+setlocal enabledelayedexpansion
+
+:: Windows Uninstall Script for Telegram OSINT Platform
+set "INSTALL_DIR=%~dp0"
+set "BACKUP_DIR=%USERPROFILE%\telegram_osint_backup_%DATE:~-4%%DATE:~-10,2%%DATE:~-7,2%_%TIME:~0,2%%TIME:~3,2%%TIME:~6,2%"
+set "CONFIG_DIR=%INSTALL_DIR%config"
+set "METRICS_FILE=%CONFIG_DIR%\installation_metrics.json"
+
+title Telegram OSINT Platform - Uninstaller
+
+echo.
+echo ╔══════════════════════════════════════════════════════════════╗
+echo ║                TELEGRAM OSINT UNINSTALLER                               ║
+echo ╚══════════════════════════════════════════════════════════════╝
+echo.
+
+:: Display metrics if available
+if exist "%METRICS_FILE%" (
+    for /f "tokens=2 delims=:" %%a in ('findstr "installation_date" "%METRICS_FILE%"') do (
+        set "INSTALL_DATE=%%a"
+    )
+    echo Installation Date: !INSTALL_DATE!
+    echo.
+)
+
+:: Warning
+echo 🚨 WARNING: This will completely remove Telegram OSINT Platform
+echo This action cannot be undone!
+echo.
+
+choice /C YN /M "Are you sure you want to continue"
+if errorlevel 2 goto :cancelled
+
+echo.
+
+:: Backup
+choice /C YN /M "Create backup before uninstallation"
+if errorlevel 2 goto :nobackup
+
+echo 📦 Creating backup...
+if not exist "%BACKUP_DIR%" mkdir "%BACKUP_DIR%"
+xcopy "%INSTALL_DIR%*.db" "%BACKUP_DIR%\" /Y /I >nul 2>&1
+xcopy "%INSTALL_DIR%config" "%BACKUP_DIR%\config\" /E /Y /I >nul 2>&1
+xcopy "%INSTALL_DIR%logs" "%BACKUP_DIR%\logs\" /E /Y /I >nul 2>&1
+echo ✅ Backup created at: %BACKUP_DIR%
+
+:nobackup
+echo.
+
+:: Remove files
+echo 🗑️ Removing installation files...
+rd /s /q "%INSTALL_DIR%ai_agents" 2>nul
+rd /s /q "%INSTALL_DIR%core" 2>nul
+rd /s /q "%INSTALL_DIR%ml_models" 2>nul
+rd /s /q "%INSTALL_DIR%cli" 2>nul
+rd /s /q "%INSTALL_DIR%installation" 2>nul
+rd /s /q "%INSTALL_DIR%security" 2>nul
+rd /s /q "%INSTALL_DIR%utils" 2>nul
+rd /s /q "%INSTALL_DIR%data" 2>nul
+del "%INSTALL_DIR%*.db" 2>nul
+del "%INSTALL_DIR%*.log" 2>nul
+del "%INSTALL_DIR%*.txt" 2>nul
+del "%INSTALL_DIR%*.toml" 2>nul
+
+:: Remove Python cache
+for /r "%INSTALL_DIR%" /d %%d in (__pycache__) do rd /s /q "%%d" 2>nul
+for /r "%INSTALL_DIR%" %%f in (*.pyc) do del "%%f" 2>nul
+
+echo ✅ Files removed
+
+:: Record uninstallation
+if exist "%METRICS_FILE%" (
+    echo 📝 Recording uninstallation...
+    copy "%METRICS_FILE%" "%BACKUP_DIR%\" >nul 2>&1
+)
+
+:: Cleanup Python packages
+choice /C YN /M "Remove installed Python packages"
+if errorlevel 2 goto :nopythonclean
+
+echo 🧹 Removing Python packages...
+pip uninstall -y -r "%INSTALL_DIR%requirements.txt" >nul 2>&1
+echo ✅ Python packages removed
+
+:nopythonclean
+echo.
+
+:: Final message
+echo ╔══════════════════════════════════════════════════════════════╗
+echo ║                    UNINSTALLATION COMPLETE                              ║
+echo ╠══════════════════════════════════════════════════════════════╣
+echo ║                                                                         ║
+echo ║   ✅ Telegram OSINT Platform has been completely removed                ║
+echo ║   📦 Backup available at: %BACKUP_DIR%                                  ║
+echo ║   🗑️  All associated files and data have been deleted                   ║
+echo ║   🧹 System has been cleaned                                            ║
+echo ║                                                                         ║
+echo ║   Thank you for using Telegram OSINT Platform!                          ║
+echo ║                                                                         ║
+echo ╚══════════════════════════════════════════════════════════════╝
+echo.
+
+goto :EOF
+
+:cancelled
+echo ❌ Uninstallation cancelled.
+pause
+exit /b 0

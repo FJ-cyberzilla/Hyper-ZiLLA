@@ -1,0 +1,12 @@
+[
+    {
+        "file_path": "test_file.cpp",
+        "language": "C/c++",
+        "success": false,
+        "errors": [
+            "[codezilla] Tool execution failed: "
+        ],
+        "warnings": [],
+        "was_fixed": false
+    }
+]

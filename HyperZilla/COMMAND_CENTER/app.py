@@ -1,148 +1,182 @@
-# ~/HyperZilla/COMMAND_CENTER/app.py
-from flask import Flask, render_template, jsonify, request
-from flask_socketio import SocketIO, emit
-import asyncio
-import json
-import threading
-import time
+"""
+Hyper-ZiLLA Command Center Web Interface
+Proprietary AI Monitoring and Control
+"""
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'hyperzilla_military_grade'
-socketio = SocketIO(app, cors_allowed_origins="*")
+from flask import Flask, render_template, jsonify, request, g
+import sys
+import os
+from pathlib import Path
 
-class CommandCenterAPI:
-    def __init__(self):
-        self.active_missions = {}
-        self.system_status = "BATTLE_STATIONS"
-        
-    def start_intelligence_mission(self, target, depth, intel_types):
-        """Start an intelligence gathering mission"""
-        mission_id = f"mission_{int(time.time())}"
-        
-        mission_data = {
-            'id': mission_id,
-            'target': target,
-            'depth': depth,
-            'intel_types': intel_types,
-            'status': 'RUNNING',
-            'progress': 0,
-            'start_time': time.time()
-        }
-        
-        self.active_missions[mission_id] = mission_data
-        
-        # Start mission in background thread
-        thread = threading.Thread(
-            target=self._execute_intelligence_mission,
-            args=(mission_id, mission_data)
-        )
-        thread.daemon = True
-        thread.start()
-        
-        return mission_id
-    
-    def _execute_intelligence_mission(self, mission_id, mission_data):
-        """Execute intelligence mission with real-time updates"""
+# Add project root to Python path
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+
+def get_ai_systems():
+    """
+    Initializes and returns the AI systems.
+    Uses Flask's application context 'g' to store the systems.
+    """
+    if 'director_ai' not in g:
         try:
-            # Simulate mission progress
-            for progress in range(0, 101, 10):
-                mission_data['progress'] = progress
-                
-                # Send progress update via WebSocket
-                socketio.emit('mission_update', {
-                    'mission_id': mission_id,
-                    'type': 'PROGRESS_UPDATE',
-                    'data': {
-                        'percent': progress,
-                        'message': f'Collection progress: {progress}%'
-                    }
-                }, room=mission_id)
-                
-                # Simulate metrics updates
-                if progress % 20 == 0:
-                    socketio.emit('mission_update', {
-                        'mission_id': mission_id,
-                        'type': 'METRICS_UPDATE',
-                        'data': {
-                            'sources_scanned': progress * 2,
-                            'data_points': progress * 50,
-                            'evasion_rate': 95 + (progress % 5)
-                        }
-                    }, room=mission_id)
-                
-                time.sleep(1)  # Simulate work
-            
-            # Mission complete
-            mission_data['status'] = 'COMPLETED'
-            socketio.emit('mission_update', {
-                'mission_id': mission_id,
-                'type': 'MISSION_COMPLETE',
-                'data': {
-                    'target': mission_data['target'],
-                    'confidence': 92,
-                    'threat_level': 'Low',
-                    'key_findings': [
-                        'Target identified successfully',
-                        'No immediate threats detected',
-                        'Data correlation complete'
-                    ]
-                }
-            }, room=mission_id)
-            
+            from HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai import DirectorAI
+            from HyperZilla.OPERATIONS_ARM.activation_test import SystemActivationTest
+            g.director_ai = DirectorAI()
+            g.system_test = SystemActivationTest()
+            g.ai_available = True
+        except ImportError as e:
+            print(f"Warning: AI modules not available: {e}")
+            g.director_ai = None
+            g.system_test = None
+            g.ai_available = False
+    return g.director_ai, g.system_test, g.ai_available
+
+
+def create_app():
+    """
+    Application factory for the Flask app.
+    """
+    app = Flask(__name__)
+
+    from config.settings import config_by_name
+    env = os.environ.get('FLASK_ENV', 'development')
+    app.config.from_object(config_by_name[env])
+
+    from HyperZilla.database import db
+    from HyperZilla.models import Event
+    db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
+
+    with app.app_context():
+        get_ai_systems()
+
+    @app.route('/')
+    def dashboard():
+        """Main dashboard page"""
+        _, _, ai_available = get_ai_systems()
+        return render_template(
+            'dashboard.html',
+            ai_available=ai_available,
+            system_name="Hyper-ZiLLA Proprietary AI"
+        )
+
+    @app.route('/facial-intel')
+    def facial_intel_panel():
+        """Facial intelligence panel"""
+        _, _, ai_available = get_ai_systems()
+        return render_template(
+            'facial_intel_panel.html',
+            ai_available=ai_available
+        )
+
+    @app.route('/api/system-status')
+    def system_status():
+        """API endpoint for system status"""
+        director_ai, _, ai_available = get_ai_systems()
+        if not ai_available:
+            return jsonify({
+                "status": "ai_unavailable",
+                "message": "AI systems not initialized",
+                "modules": []
+            })
+
+        try:
+            status = director_ai.get_system_status() if director_ai else {}
+            return jsonify(
+                            {
+                                "status": "operational",
+                                "system_status": status.get('system_status', 'unknown'),
+                                "modules": status.get('active_modules', []),
+                                "uptime": status.get('uptime', '0:00:00'),
+                                "ai_technology": "Hyper-ZiLLA Proprietary AI"
+                            }
+                        )
         except Exception as e:
-            mission_data['status'] = 'FAILED'
-            socketio.emit('mission_update', {
-                'mission_id': mission_id,
-                'type': 'MISSION_ERROR',
-                'data': {'error': str(e)}
-            }, room=mission_id)
+            return jsonify({
+                "status": "error",
+                "error": str(e)
+            })
 
-# Initialize API
-command_api = CommandCenterAPI()
+    @app.route('/api/run-test', methods=['POST'])
+    def run_system_test():
+        """API endpoint to run system tests"""
+        _, system_test, ai_available = get_ai_systems()
+        if not ai_available:
+            return jsonify({
+                "status": "error",
+                "message": "AI systems not available"
+            })
 
-@app.route('/')
-def dashboard():
-    return render_template('dashboard.html')
+        try:
+            system_test.run_comprehensive_test()
+            return jsonify({
+                "status": "success",
+                "message": "System tests completed"
+            })
+        except Exception as e:
+            return jsonify({
+                "status": "error",
+                "error": str(e)
+            })
 
-@app.route('/api/start-collection', methods=['POST'])
-def start_collection():
-    data = request.json
-    mission_id = command_api.start_intelligence_mission(
-        data['target'],
-        data['depth'],
-        data['intelTypes']
-    )
-    
-    return jsonify({
-        'success': True,
-        'mission_id': mission_id,
-        'message': 'Intelligence collection started'
-    })
+    @app.route('/api/initialize-ai', methods=['POST'])
+    def initialize_ai():
+        """API endpoint to initialize AI systems"""
+        director_ai, _, ai_available = get_ai_systems()
 
-@app.route('/api/system-status')
-def system_status():
-    return jsonify({
-        'status': command_api.system_status,
-        'health': 95,
-        'active_missions': len(command_api.active_missions),
-        'timestamp': time.time()
-    })
+        try:
+            if not ai_available:
+                # Re-initialize within the context
+                from HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai import DirectorAI
+                g.director_ai = DirectorAI()
+                g.ai_available = True
 
-@socketio.on('connect')
-def handle_connect():
-    print('Client connected')
+            g.director_ai.initialize_system()
 
-@socketio.on('join_mission')
-def handle_join_mission(data):
-    mission_id = data['mission_id']
-    join_room(mission_id)
-    print(f'Client joined mission: {mission_id}')
+            return jsonify({
+                "status": "success",
+                "message": "Hyper-ZiLLA AI initialized successfully"
+            })
+        except Exception as e:
+            return jsonify({
+                "status": "error",
+                "error": str(e)
+            })
 
-@socketio.on('disconnect')
-def handle_disconnect():
-    print('Client disconnected')
+    @app.route('/api/ai-capabilities')
+    def ai_capabilities():
+        """API endpoint listing AI capabilities"""
+        capabilities = {
+            "proprietary_ai": True,
+            "custom_neural_networks": True,
+            "facial_recognition": True,
+            "threat_intelligence": True,
+            "pattern_analysis": True,
+            "strategic_decision_making": True,
+            "external_dependencies": False,
+            "technology_owner": "Hyper-ZiLLA Team"
+        }
 
-if __name__ == '__main__':
-    print("🐲 HYPER-ZILLA COMMAND CENTER STARTING...")
-    print("📍 Dashboard: http://localhost:5000")
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+        return jsonify(capabilities)
+
+    @app.route('/api/events')
+    def get_events():
+        """API endpoint for system events"""
+        try:
+            events = Event.query.order_by(Event.timestamp.desc()).all()
+            return jsonify([{
+                'id': event.id,
+                'type': event.type,
+                'description': event.description,
+                'timestamp': event.timestamp.isoformat()
+            } for event in events])
+        except Exception as e:
+            return jsonify({
+                "status": "error",
+                "error": str(e)
+            })
+
+    return app

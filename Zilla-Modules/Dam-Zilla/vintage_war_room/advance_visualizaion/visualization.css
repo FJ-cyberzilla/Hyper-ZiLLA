@@ -1,0 +1,156 @@
+/* ZILLA-DAM VINTAGE WAR ROOM STYLING */
+.zilla-network-graph {
+    background: linear-gradient(135deg, #2F4F4F 0%, #1a1a1a 100%);
+    border: 2px solid #D4AF37;
+    border-radius: 8px;
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    color: #00FF41;
+}
+
+.zilla-node {
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px currentColor;
+}
+
+.zilla-node.primary {
+    animation: pulse 2s infinite;
+}
+
+.zilla-node:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 30px currentColor;
+}
+
+.zilla-geo-map {
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%232F4F4F"/><path d="M10,10 L90,10 L90,90 L10,90 Z" fill="none" stroke="%2300FF41" stroke-width="0.5"/></svg>');
+    border: 1px solid #D4AF37;
+    position: relative;
+}
+
+.zilla-location-marker {
+    animation: bounce 1s infinite alternate;
+}
+
+.location-legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+.legend-item .color {
+    margin-right: 5px;
+    font-size: 16px;
+}
+
+.legend-item .color.expected { color: #00ff00; }
+.legend-item .color.vpn { color: #ff0000; }
+.legend-item .color.estimated { color: #ffff00; }
+
+.zilla-behavior-chart {
+    background: #2F4F4F;
+    padding: 15px;
+    border: 1px solid #D4AF37;
+}
+
+.activity-bars {
+    display: flex;
+    gap: 2px;
+    height: 100px;
+    align-items: end;
+}
+
+.activity-bar {
+    flex: 1;
+    background: #00FF41;
+    text-align: center;
+    font-size: 10px;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.activity-bar:hover {
+    background: #D4AF37;
+}
+
+.anomaly-alert {
+    background: #8B0000;
+    color: white;
+    padding: 8px;
+    margin: 5px 0;
+    border-left: 4px solid #ff4444;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.zilla-time-series {
+    background: #2F4F4F;
+    padding: 15px;
+    border: 1px solid #D4AF37;
+}
+
+.timeline-track {
+    position: relative;
+    height: 60px;
+    background: #1a1a1a;
+    border: 1px solid #00FF41;
+    margin: 20px 0;
+}
+
+.timeline-event {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.timeline-event:hover {
+    transform: translateY(-50%) scale(1.5);
+}
+
+.event-tooltip {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    border: 1px solid #D4AF37;
+    padding: 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+.timeline-event:hover .event-tooltip {
+    display: block;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+@keyframes bounce {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-5px); }
+}
+
+/* Vintage terminal effect */
+.vintage-terminal {
+    background: #1a1a1a;
+    color: #00FF41;
+    font-family: 'Courier New', monospace;
+    border: 3px double #D4AF37;
+    padding: 20px;
+    text-shadow: 0 0 5px #00FF41;
+}

@@ -1,0 +1,24 @@
+
+# Build artifacts
+build/
+CMakeCache.txt
+
+# Executables
+codezilla
+system_test
+
+# Databases
+*.db
+ai_database.db
+codezilla.db
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp

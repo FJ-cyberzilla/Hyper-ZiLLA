@@ -1,0 +1,23 @@
+# k8s/monster-orchestrator.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-orchestrator
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: cognitive-processor
+        image: secure-ai-orchestrator:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: AI_MODEL_PATH
+          value: "/models/neural_network"
+        - name: SECURITY_LEVEL
+          value: "enterprise"
+        resources:
+          limits:
+            memory: "4Gi"
+            cpu: "2"

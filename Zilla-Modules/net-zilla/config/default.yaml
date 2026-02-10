@@ -1,0 +1,13 @@
+security:
+  safe_user_agent: "Mozilla/5.0 (compatible; NetZilla-Security-Scanner/2.1)"
+  request_timeout: 30
+  max_redirects: 10
+
+ai:
+  enable_ai: true
+  confidence_threshold: 0.7
+
+output:
+  save_reports: true
+  report_format: "txt"
+  enable_colors: true

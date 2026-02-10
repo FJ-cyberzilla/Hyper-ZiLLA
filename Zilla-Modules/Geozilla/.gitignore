@@ -1,0 +1,89 @@
+# Cognizilla Quantum Gitignore
+# FJ-Cyberzilla Sovereign System
+
+# Binaries
+/bin/
+/cognizilla
+/cognizilla.exe
+/cognizilla-darwin
+/cognizilla-linux
+/cognizilla-windows.exe
+
+# Dependency directories
+/node_modules/
+/vendor/
+/.vendor/
+
+# Build outputs
+/dist/
+/build/
+/.build/
+/out/
+/target/
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+.env.quantum
+
+# Quantum keys and secrets
+/configuration/quantum-keys/
+/configuration/ssl/
+/secrets/
+*.key
+*.pem
+*.crt
+*.pub
+*.priv
+
+# Database and data
+/data/
+/.data/
+*.db
+*.sqlite
+*.log
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+/tmp/
+/temp/
+
+# Coverage
+/coverage/
+*.cover
+
+# Mobile specific (Termux)
+.termux/
+termux-setup-storage
+
+# WSL specific
+.wslconfig
+
+# Makefile artifacts
+*.d
+*.o
+*.a
+
+# Quantum entanglement files
+*.quantum
+*.entanglement

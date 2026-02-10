@@ -1,14 +1,15 @@
 # ~/HyperZilla/OPERATIONS_ARM/EVASION_INFRASTRUCTURE/anti_detection/advanced_captcha_evasion.py
 import time
 import random
-import hashlib
-import json
+
+
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.by import By
+
 import numpy as np
-from browser_history import get_history
-import tempfile
-import os
+
+
+
+import requests
 
 class AdvancedCaptchaIntelligence:
     def __init__(self):
@@ -96,7 +97,8 @@ class AdvancedCaptchaIntelligence:
             else:
                 return 0.7  # Fresh cookies = higher risk
                 
-        except:
+        except Exception as e:
+            print(f"Error analyzing cookie history: {e}")
             return 0.8  # Error case = assume higher risk
 
 class VPNManager:
@@ -301,6 +303,25 @@ class ComprehensiveCaptchaEvasion:
         
         # Simulate reading behavior (scrolling, pauses)
         self._simulate_reading_behavior(driver)
+
+    def _simulate_reading_behavior(self, driver):
+        """Simulate human-like reading behavior (scrolling, pauses)"""
+        print("Simulating reading behavior (scrolling and pauses)...")
+        try:
+            # Scroll down the page multiple times
+            for _ in range(random.randint(2, 5)):
+                scroll_amount = random.randint(200, 800)
+                driver.execute_script(f"window.scrollBy(0, {scroll_amount});")
+                time.sleep(random.uniform(0.5, 2.0)) # Pause to simulate reading
+
+            # Scroll back up a bit sometimes
+            if random.random() > 0.5:
+                scroll_amount = random.randint(100, 300)
+                driver.execute_script(f"window.scrollBy(0, -{scroll_amount});")
+                time.sleep(random.uniform(0.3, 1.0))
+
+        except Exception as e:
+            print(f"Error simulating reading behavior: {e}")
         
     def _access_with_evasion(self, driver, url):
         """Access target with comprehensive evasion"""

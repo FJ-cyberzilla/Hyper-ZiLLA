@@ -1,0 +1,10 @@
+Package: entynet-pentest
+Version: 3.0.0
+Section: security
+Priority: optional
+Architecture: aarch64
+Depends: libssl3, libpcap0.8
+Maintainer: Entynetproject <entynetproject@example.com>
+Description: Enterprise Level Penetration Testing Framework
+ Entynet Hacker Tools Enterprise is a comprehensive penetration
+ testing framework for security professionals.

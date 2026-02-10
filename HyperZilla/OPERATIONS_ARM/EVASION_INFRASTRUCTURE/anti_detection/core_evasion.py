@@ -6,7 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from fake_useragent import UserAgent
 import requests
-import numpy as np
+
 
 class HyperZillaEvasion:
     def __init__(self):
@@ -143,7 +143,8 @@ class ProxyRotator:
                 response = requests.get(source, timeout=10)
                 proxies = response.text.strip().split('\r\n')
                 fresh_proxies.extend(proxies)
-            except:
+            except Exception as e:
+                print(f"Error refreshing proxy pool from {source}: {e}")
                 continue
                 
         self.current_proxies = list(set(fresh_proxies))

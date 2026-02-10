@@ -1,0 +1,4 @@
+# Commit and push
+git add config/configure
+git commit -m "feat: add configure installer script"
+git push

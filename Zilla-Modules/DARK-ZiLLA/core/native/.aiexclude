@@ -1,0 +1,8 @@
+# This file is intended to specify paths or patterns that should be excluded from AI analysis or processing.
+# Its exact purpose can be defined by the project'In this context, it might be used to exclude:
+# - AI model files
+# - AI-generated code
+# - Specific AI service scripts that should not be analyzed by other tools.
+
+# Example: Exclude the AI service script itself if it's not meant for analysis by other tools
+# src/analysis/ai/ai_service.py

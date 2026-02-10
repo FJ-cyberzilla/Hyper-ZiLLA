@@ -1,0 +1,11 @@
+# Safety security policy for Entynet Enterprise
+security:
+  ignore-cves:
+    - "CVE-2023-XXXXX"  # False positive in development dependency
+    - "CVE-2022-YYYYY"  # Not applicable to our use case
+  
+  allowed-vulnerabilities:
+    - vulnerability_id: "PYUP-123"
+      reason: "This is a test dependency only"
+    - vulnerability_id: "PYSEC-456"
+      reason: "Fixed in our deployment configuration"

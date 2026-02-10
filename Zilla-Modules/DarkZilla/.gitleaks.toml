@@ -1,0 +1,24 @@
+title = "Entynet Enterprise Gitleaks Config"
+
+[[rules]]
+description = "Entynet Test Keys"
+regex = '''entynet-test-[A-Za-z0-9]{32}'''
+tags = ["test", "entynet"]
+
+[[rules]]
+description = "Example API Keys"
+regex = '''(?:api[_-]?key|AP I[_-]?KEY|apikey)[\s]*=[\s]*["']?([a-zA-Z0-9]{32,45})["']?'''
+tags = ["key", "api"]
+
+# Allow these patterns in tests
+[[allowlist]]
+description = "Test files can have example keys"
+files = ['''(.*?)(\.test\.|_test\.|tests?/|spec\.|fixtures?/)''']
+
+[[allowlist]]
+description = "Configuration templates"
+files = ['''.*\.template$''', '''.*template.*''']
+
+[[allowlist]]
+description = "Documentation examples"
+files = ['''docs/''', '''examples/''', '''README\.md''']

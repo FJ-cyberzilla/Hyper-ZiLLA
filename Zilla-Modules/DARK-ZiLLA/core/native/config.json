@@ -1,0 +1,108 @@
+{
+  "application": {
+    "name": "CodeZilla",
+    "version": "2.0.0",
+    "environment": "production"
+  },
+  
+  "database": {
+    "path": "codezilla.db",
+    "connection_timeout": 30,
+    "max_connections": 10,
+    "auto_vacuum": true,
+    "journal_mode": "WAL"
+  },
+  
+  "logging": {
+    "level": "INFO",
+    "file": "codezilla.log",
+    "max_file_size_mb": 50,
+    "max_backup_files": 5,
+    "console_output": true,
+    "timestamp_format": "%Y-%m-%d %H:%M:%S"
+  },
+  
+  "ai_engine": {
+    "python_executable": "python3",
+    "service_path": "src/analysis/ai/ai_service.py",
+    "model_type": "advanced",
+    "timeout_seconds": 30,
+    "max_retries": 3,
+    "retry_delay_ms": 100,
+    "enable_caching": true,
+    "enable_learning": true,
+    "cache_max_size": 1000,
+    "cache_ttl_seconds": 3600,
+    "warmup_on_startup": false,
+    "health_check_interval_seconds": 300
+  },
+  
+  "analysis": {
+    "supported_languages": [
+      "cpp",
+      "python",
+      "javascript",
+      "java",
+      "go"
+    ],
+    "max_file_size_mb": 10,
+    "recursive_depth_limit": 10,
+    "exclude_patterns": [
+      "*.git*",
+      "*.svn*",
+      "*node_modules*",
+      "*__pycache__*",
+      "*.min.js",
+      "*.min.css",
+      "*build*",
+      "*dist*"
+    ],
+    "include_patterns": [
+      "*.cpp",
+      "*.cc",
+      "*.cxx",
+      "*.h",
+      "*.hpp",
+      "*.py",
+      "*.js",
+      "*.java",
+      "*.go"
+    ],
+    "parallel_analysis": true,
+    "max_parallel_jobs": 4
+  },
+  
+  "security": {
+    "enable_vulnerability_detection": true,
+    "severity_threshold": "LOW",
+    "enable_cwe_mapping": true,
+    "enable_cvss_scoring": false
+  },
+  
+  "reporting": {
+    "output_directory": "reports",
+    "default_format": "json",
+    "include_metrics": true,
+    "include_recommendations": true,
+    "timestamp_reports": true
+  },
+  
+  "performance": {
+    "enable_profiling": false,
+    "memory_limit_mb": 2048,
+    "cpu_limit_percent": 80
+  },
+  
+  "ui": {
+    "enable_colors": true,
+    "clear_screen_on_menu": true,
+    "auto_scroll": true,
+    "items_per_page": 20
+  },
+  
+  "paths": {
+    "temp_directory": "/tmp/codezilla",
+    "cache_directory": ".cache/codezilla",
+    "report_directory": "reports"
+  }
+}

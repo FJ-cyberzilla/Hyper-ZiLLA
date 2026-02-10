@@ -1,0 +1,6 @@
+OPERATIONAL: [🟢]
+WARNING:     [🟡] 
+CRITICAL:    [🔴]
+SCANNING:    [🔍]
+ANALYZING:   [🧠]
+SECURE:      [🔒]

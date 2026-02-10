@@ -1,11 +1,9 @@
 # ~/HyperZilla/INTELLIGENCE_ARM/DIGITAL_OSINT/integration_bridge.py
-import sys
-import os
-sys.path.append('/Millitary')  # Your original stack
 
 from core.comprehensive_orchestrator import AdvancedOrchestrator
 from correlation_engine import CorrelationEngine
 from evasion_engine import EvasionEngine
+
 
 class DigitalOSINTBridge:
     def __init__(self):

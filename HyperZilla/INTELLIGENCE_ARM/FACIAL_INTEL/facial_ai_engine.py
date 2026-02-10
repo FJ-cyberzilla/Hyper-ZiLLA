@@ -5,12 +5,13 @@ import face_recognition
 import dlib
 from deepface import DeepFace
 import torch
-import torchvision.transforms as transforms
+
 from PIL import Image
 import os
 import json
-from typing import Dict, List, Tuple
+from typing import Dict, List
 import asyncio
+from HyperZilla.INTELLIGENCE_ARM.DIGITAL_OSINT.integration_bridge import DigitalOSINTBridge as OSINTIntegration
 
 class HyperZillaFacialAI:
     def __init__(self):
@@ -198,7 +199,8 @@ class FaceDatabase:
         try:
             with open(self.db_path, 'r') as f:
                 return json.load(f)
-        except:
+        except Exception as e:
+            print(f"Error loading face encodings from {self.db_path}: {e}")
             return {}
 
 class FacialSearchEngines:

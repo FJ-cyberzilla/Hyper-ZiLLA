@@ -1,511 +1,199 @@
-# ~/HyperZilla/INTELLIGENCE_ARM/FACIAL_INTEL/forensic_protocols.py
+"""
+Forensic Protocols for Facial Intelligence
+Enhanced with proper Python syntax and error handling
+"""
+
 import cv2
 import numpy as np
-from PIL import Image, ImageEnhance, ImageFilter
+from typing import Dict, List, Tuple, Optional
+import hashlib
 import json
 from datetime import datetime
-from typing import Dict, List, Tuple
-import asyncio
+import logging
 
-class ForensicImageAnalyzer:
-    """ANALYZE PROBE IMAGES - Professional image assessment"""
-    
+class ForensicAnalyzer:
     def __init__(self):
-        self.quality_metrics = {}
-        self.enhancement_log = []
-    
-    async def analyze_probe_image(self, image_path: str) -> Dict:
-        """Comprehensive probe image analysis per professional protocols"""
-        print("🔍 ANALYZING PROBE IMAGE FOR FORENSIC SUITABILITY...")
+        self.logger = logging.getLogger(__name__)
+        self.analysis_cache = {}
         
-        analysis = {
-            'basic_metrics': await self._calculate_basic_metrics(image_path),
-            'facial_visibility': await self._assess_facial_visibility(image_path),
-            'image_quality': await self._assess_image_quality(image_path),
-            'enhancement_recommendations': [],
-            'suitability_score': 0.0,
-            'professional_judgment': ''
-        }
+    def analyze_skin_texture(self, image_path: str, face_coordinates: Tuple) -> Dict:
+        """
+        Analyze skin texture patterns for forensic identification
         
-        # Calculate overall suitability score
-        analysis['suitability_score'] = self._calculate_suitability_score(analysis)
-        analysis['professional_judgment'] = self._provide_professional_judgment(analysis)
-        analysis['enhancement_recommendations'] = self._generate_enhancement_recommendations(analysis)
+        Args:
+            image_path: Path to the image file
+            face_coordinates: (x, y, w, h) face coordinates
         
-        return analysis
-    
-    async def _calculate_basic_metrics(self, image_path: str) -> Dict:
-        """Calculate basic image metrics"""
-        image = cv2.imread(image_path)
-        if image is None:
-            return {}
-            
-        height, width, channels = image.shape
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        
-        return {
-            'resolution': f"{width}x{height}",
-            'file_size_kb': os.path.getsize(image_path) / 1024,
-            'brightness': np.mean(gray),
-            'contrast': np.std(gray),
-            'sharpness': self._calculate_sharpness(gray),
-            'color_channels': channels
-        }
-    
-    async def _assess_facial_visibility(self, image_path: str) -> Dict:
-        """Assess facial visibility and orientation"""
+        Returns:
+            Dictionary containing texture analysis results
+        """
         try:
-            from .facial_ai_engine import HyperZillaFacialAI
-            facial_ai = HyperZillaFacialAI()
-            face_data = await facial_ai._extract_facial_features(image_path)
+            img = cv2.imread(image_path)
+            if img is None:
+                raise ValueError(f"Could not load image from {image_path}")
             
-            if not face_data:
-                return {'faces_detected': 0, 'primary_face_quality': 'NO_FACE'}
+            x, y, w, h = face_coordinates
+            face_roi = img[y:y+h, x:x+w]
             
-            primary_face = self._analyze_primary_face(face_data)
+            if face_roi.size == 0:
+                return {"error": "Invalid face coordinates"}
+            
+            # Convert to grayscale for texture analysis
+            gray_face = cv2.cvtColor(face_roi, cv2.COLOR_BGR2GRAY)
+            
+            # Calculate texture features
+            texture_features = self._extract_texture_features(gray_face)
+            unique_signature = self._generate_texture_signature(texture_features)
             
             return {
-                'faces_detected': len(face_data['encodings']),
-                'primary_face_quality': primary_face['quality'],
-                'face_angle': primary_face['angle'],
-                'visibility_score': primary_face['visibility_score'],
-                'landmarks_detected': primary_face['landmarks_count']
+                "texture_signature": unique_signature,
+                "pore_density": texture_features.get('pore_density', 0),
+                "skin_smoothness": texture_features.get('smoothness', 0),
+                "wrinkle_pattern": texture_features.get('wrinkle_pattern', {}),
+                "analysis_timestamp": datetime.now().isoformat(),
+                "confidence_score": self._calculate_confidence(texture_features)
             }
-            
         except Exception as e:
-            return {'faces_detected': 0, 'primary_face_quality': 'ANALYSIS_ERROR'}
+            self.logger.error(f"Skin texture analysis failed: {e}")
+            return {"error": str(e)}
     
-    def _analyze_primary_face(self, face_data: Dict) -> Dict:
-        """Analyze the primary face in detail"""
-        if not face_data.get('dlib_rects'):
-            return {'quality': 'NO_FACE', 'angle': 0, 'visibility_score': 0}
+    def _extract_texture_features(self, gray_image: np.ndarray) -> Dict:
+        """Extract detailed texture features from facial region"""
+        features = {}
         
-        rect = face_data['dlib_rects'][0]
-        landmarks = self._get_facial_landmarks(face_data)
+        # Calculate Local Binary Patterns for texture
+        lbp = self._calculate_lbp(gray_image)
+        features['lbp_histogram'] = lbp.tolist()
         
-        # Calculate face angle (simplified)
-        face_angle = self._estimate_face_angle(landmarks)
+        # Calculate pore density (simplified)
+        features['pore_density'] = self._estimate_pore_density(gray_image)
         
-        # Calculate visibility score
-        visibility_score = self._calculate_visibility_score(rect, landmarks, face_angle)
+        # Calculate skin smoothness
+        features['smoothness'] = self._calculate_smoothness(gray_image)
         
-        # Determine quality category
-        quality = self._determine_face_quality(visibility_score, face_angle)
+        # Detect wrinkle patterns
+        features['wrinkle_pattern'] = self._detect_wrinkle_patterns(gray_image)
         
-        return {
-            'quality': quality,
-            'angle': face_angle,
-            'visibility_score': visibility_score,
-            'landmarks_count': landmarks.num_parts if landmarks else 0
-        }
+        return features
     
-    def _estimate_face_angle(self, landmarks) -> float:
-        """Estimate face rotation angle"""
-        if not landmarks or landmarks.num_parts < 68:
-            return 0.0
+    def _calculate_lbp(self, image: np.ndarray) -> np.ndarray:
+        """Calculate Local Binary Patterns for texture analysis"""
+        height, width = image.shape
+        lbp_image = np.zeros_like(image)
         
-        # Simple angle estimation based on eye positions
-        try:
-            left_eye_center = np.mean([(landmarks.part(i).x, landmarks.part(i).y) for i in range(36, 42)], axis=0)
-            right_eye_center = np.mean([(landmarks.part(i).x, landmarks.part(i).y) for i in range(42, 48)], axis=0)
-            
-            dx = right_eye_center[0] - left_eye_center[0]
-            angle = np.degrees(np.arctan2(dx, 50))  # Simplified calculation
-            
-            return abs(angle)
-        except:
-            return 0.0
+        for i in range(1, height-1):
+            for j in range(1, width-1):
+                center = image[i, j]
+                binary_code = 0
+                binary_code |= (image[i-1, j-1] > center) << 7
+                binary_code |= (image[i-1, j] > center) << 6
+                binary_code |= (image[i-1, j+1] > center) << 5
+                binary_code |= (image[i, j+1] > center) << 4
+                binary_code |= (image[i+1, j+1] > center) << 3
+                binary_code |= (image[i+1, j] > center) << 2
+                binary_code |= (image[i+1, j-1] > center) << 1
+                binary_code |= (image[i, j-1] > center) << 0
+                lbp_image[i, j] = binary_code
+        
+        hist, _ = np.histogram(lbp_image.ravel(), bins=256, range=(0, 256))
+        return hist
     
-    def _calculate_visibility_score(self, rect, landmarks, angle: float) -> float:
-        """Calculate face visibility score (0-100)"""
-        score = 100.0
+    def _estimate_pore_density(self, image: np.ndarray) -> float:
+        """Estimate pore density using blob detection"""
+        # Simple blob detection for pores
+        params = cv2.SimpleBlobDetector_Params()
+        params.filterByArea = True
+        params.minArea = 1
+        params.maxArea = 10
+        params.filterByCircularity = True
+        params.minCircularity = 0.3
         
-        # Penalize off-axis faces
-        score -= min(angle * 2, 40)  # Up to 40 point penalty for angle
+        detector = cv2.SimpleBlobDetector_create(params)
+        keypoints = detector.detect(image)
         
-        # Penalize small faces
-        face_size = rect.width() * rect.height()
-        if face_size < 10000:  # Small face
-            score -= 20
-        elif face_size < 5000:  # Very small face
-            score -= 40
-        
-        # Penalize incomplete landmarks
-        if landmarks and landmarks.num_parts < 68:
-            score -= (68 - landmarks.num_parts) * 0.5
-        
-        return max(score, 0)
+        return len(keypoints) / (image.shape[0] * image.shape[1]) * 10000
     
-    def _determine_face_quality(self, visibility_score: float, angle: float) -> str:
-        """Determine professional face quality category"""
-        if visibility_score >= 80 and angle <= 15:
-            return "EXCELLENT"
-        elif visibility_score >= 60 and angle <= 30:
-            return "GOOD" 
-        elif visibility_score >= 40 and angle <= 45:
-            return "FAIR"
-        elif visibility_score >= 20:
-            return "POOR"
-        else:
-            return "UNSUITABLE"
+    def _calculate_smoothness(self, image: np.ndarray) -> float:
+        """Calculate skin smoothness using variance"""
+        return float(np.var(image))
     
-    async def _assess_image_quality(self, image_path: str) -> Dict:
-        """Assess overall image quality"""
-        image = cv2.imread(image_path)
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    def _detect_wrinkle_patterns(self, image: np.ndarray) -> Dict:
+        """Detect wrinkle patterns using edge detection"""
+        edges = cv2.Canny(image, 50, 150)
+        lines = cv2.HoughLinesP(edges, 1, np.pi/180, threshold=30, 
+                               minLineLength=10, maxLineGap=5)
         
-        # Calculate blurriness
-        blur_value = cv2.Laplacian(gray, cv2.CV_64F).var()
-        
-        # Calculate noise
-        noise_value = np.std(gray)
-        
-        # Calculate dynamic range
-        hist = cv2.calcHist([gray], [0], None, [256], [0, 256])
-        dynamic_range = np.sum(hist > 0) / 256.0
-        
-        return {
-            'blurriness': blur_value,
-            'blur_quality': 'SHARP' if blur_value > 100 else 'BLURRED' if blur_value > 50 else 'VERY_BLURRED',
-            'noise_level': noise_value,
-            'noise_quality': 'LOW' if noise_value < 20 else 'MEDIUM' if noise_value < 40 else 'HIGH',
-            'dynamic_range': dynamic_range,
-            'exposure_quality': 'GOOD' if 0.1 < dynamic_range < 0.9 else 'POOR'
-        }
-    
-    def _calculate_suitability_score(self, analysis: Dict) -> float:
-        """Calculate overall suitability score for facial recognition"""
-        score = 0.0
-        
-        # Face visibility contributes 60%
-        face_vis = analysis['facial_visibility']
-        if face_vis.get('faces_detected', 0) > 0:
-            score += (face_vis.get('visibility_score', 0) / 100) * 60
-        
-        # Image quality contributes 40%
-        img_quality = analysis['image_quality']
-        quality_factors = [
-            1.0 if img_quality.get('blur_quality') == 'SHARP' else 0.5,
-            1.0 if img_quality.get('noise_quality') == 'LOW' else 0.5,
-            1.0 if img_quality.get('exposure_quality') == 'GOOD' else 0.5
-        ]
-        score += (sum(quality_factors) / len(quality_factors)) * 40
-        
-        return score
-    
-    def _provide_professional_judgment(self, analysis: Dict) -> str:
-        """Provide professional judgment per forensic protocols"""
-        score = analysis['suitability_score']
-        face_quality = analysis['facial_visibility'].get('primary_face_quality', 'UNSUITABLE')
-        
-        if score >= 80 and face_quality in ['EXCELLENT', 'GOOD']:
-            return "HIGHLY SUITABLE - Proceed with facial recognition search"
-        elif score >= 60 and face_quality in ['GOOD', 'FAIR']:
-            return "MODERATELY SUITABLE - Consider image enhancement before search"
-        elif score >= 40:
-            return "MARGINALLY SUITABLE - Enhancement required, results may be limited"
-        else:
-            return "UNSUITABLE - Do not proceed without significant enhancement or alternative imagery"
-    
-    def _generate_enhancement_recommendations(self, analysis: Dict) -> List[str]:
-        """Generate professional enhancement recommendations"""
-        recommendations = []
-        face_vis = analysis['facial_visibility']
-        img_quality = analysis['image_quality']
-        
-        # Face-related recommendations
-        if face_vis.get('faces_detected', 0) == 0:
-            recommendations.append("NO FACE DETECTED - Cannot proceed with facial recognition")
-            return recommendations
-        
-        if face_vis.get('primary_face_quality') in ['POOR', 'UNSUITABLE']:
-            recommendations.append("FACE QUALITY ISSUE - Consider alternative source imagery")
-        
-        if face_vis.get('face_angle', 0) > 30:
-            recommendations.append(f"FACE ANGLE {face_vis['face_angle']:.1f}° - Consider rotation correction")
-        
-        # Image quality recommendations
-        if img_quality.get('blur_quality') in ['BLURRED', 'VERY_BLURRED']:
-            recommendations.append("IMAGE BLUR DETECTED - Apply deblurring enhancement")
-        
-        if img_quality.get('noise_quality') == 'HIGH':
-            recommendations.append("HIGH NOISE LEVEL - Apply noise reduction")
-        
-        if img_quality.get('exposure_quality') == 'POOR':
-            recommendations.append("POOR EXPOSURE - Adjust brightness/contrast")
-        
-        return recommendations
-
-class ForensicImageEnhancer:
-    """IN-LINE IMAGE ENHANCEMENT with audit trail"""
-    
-    def __init__(self):
-        self.enhancement_log = []
-        self.original_image = None
-    
-    async def enhance_probe_image(self, image_path: str, enhancements: Dict) -> Dict:
-        """Apply professional image enhancements with audit trail"""
-        print("🛠️ APPLYING FORENSIC IMAGE ENHANCEMENTS...")
-        
-        # Load original image
-        self.original_image = Image.open(image_path)
-        enhanced_image = self.original_image.copy()
-        
-        # Apply requested enhancements
-        enhancement_results = {}
-        
-        for enhancement, params in enhancements.items():
-            if hasattr(self, f'_enhance_{enhancement}'):
-                enhanced_image, result = await getattr(self, f'_enhance_{enhancement}')(enhanced_image, params)
-                enhancement_results[enhancement] = result
-        
-        # Save enhanced image
-        enhanced_path = f"/tmp/enhanced_{os.path.basename(image_path)}"
-        enhanced_image.save(enhanced_path)
-        
-        # Log all enhancements
-        self._log_enhancements(enhancements, enhancement_results)
-        
-        return {
-            'enhanced_image_path': enhanced_path,
-            'enhancements_applied': list(enhancements.keys()),
-            'enhancement_results': enhancement_results,
-            'audit_trail': self.enhancement_log
-        }
-    
-    async def _enhance_rotate(self, image: Image.Image, params: Dict) -> Tuple[Image.Image, Dict]:
-        """Rotate image"""
-        angle = params.get('angle', 0)
-        rotated = image.rotate(angle, expand=True)
-        
-        result = {
-            'original_orientation': 'as_captured',
-            'rotation_applied': angle,
-            'timestamp': datetime.now().isoformat()
+        wrinkle_data = {
+            "total_wrinkles": 0,
+            "horizontal_wrinkles": 0,
+            "vertical_wrinkles": 0,
+            "average_length": 0
         }
         
-        self.enhancement_log.append({
-            'operation': 'rotate',
-            'parameters': params,
-            'result': result,
-            'timestamp': datetime.now().isoformat()
-        })
-        
-        return rotated, result
-    
-    async def _enhance_brightness(self, image: Image.Image, params: Dict) -> Tuple[Image.Image, Dict]:
-        """Adjust brightness"""
-        factor = params.get('factor', 1.0)
-        enhancer = ImageEnhance.Brightness(image)
-        enhanced = enhancer.enhance(factor)
-        
-        result = {
-            'original_brightness': 'as_captured',
-            'brightness_factor': factor,
-            'timestamp': datetime.now().isoformat()
-        }
-        
-        self.enhancement_log.append({
-            'operation': 'brightness',
-            'parameters': params,
-            'result': result,
-            'timestamp': datetime.now().isoformat()
-        })
-        
-        return enhanced, result
-    
-    async def _enhance_contrast(self, image: Image.Image, params: Dict) -> Tuple[Image.Image, Dict]:
-        """Adjust contrast"""
-        factor = params.get('factor', 1.0)
-        enhancer = ImageEnhance.Contrast(image)
-        enhanced = enhancer.enhance(factor)
-        
-        result = {
-            'original_contrast': 'as_captured',
-            'contrast_factor': factor,
-            'timestamp': datetime.now().isoformat()
-        }
-        
-        self.enhancement_log.append({
-            'operation': 'contrast',
-            'parameters': params,
-            'result': result,
-            'timestamp': datetime.now().isoformat()
-        })
-        
-        return enhanced, result
-    
-    async def _enhance_sharpen(self, image: Image.Image, params: Dict) -> Tuple[Image.Image, Dict]:
-        """Sharpen image"""
-        factor = params.get('factor', 1.0)
-        enhancer = ImageEnhance.Sharpness(image)
-        enhanced = enhancer.enhance(factor)
-        
-        result = {
-            'original_sharpness': 'as_captured',
-            'sharpness_factor': factor,
-            'timestamp': datetime.now().isoformat()
-        }
-        
-        self.enhancement_log.append({
-            'operation': 'sharpen',
-            'parameters': params,
-            'result': result,
-            'timestamp': datetime.now().isoformat()
-        })
-        
-        return enhanced, result
-    
-    async def _enhance_deblur(self, image: Image.Image, params: Dict) -> Tuple[Image.Image, Dict]:
-        """Apply deblurring"""
-        # Simple deblurring using sharpening filter
-        enhanced = image.filter(ImageFilter.SHARPEN)
-        
-        result = {
-            'deblurring_method': 'sharpening_filter',
-            'iterations': 1,
-            'timestamp': datetime.now().isoformat()
-        }
-        
-        self.enhancement_log.append({
-            'operation': 'deblur',
-            'parameters': params,
-            'result': result,
-            'timestamp': datetime.now().isoformat()
-        })
-        
-        return enhanced, result
-    
-    def _log_enhancements(self, enhancements: Dict, results: Dict):
-        """Log all enhancements for audit trail"""
-        audit_entry = {
-            'timestamp': datetime.now().isoformat(),
-            'original_image_properties': self._get_image_properties(self.original_image),
-            'enhancements_requested': enhancements,
-            'enhancements_applied': results,
-            'analyst_notes': 'Enhanced for facial recognition suitability'
-        }
-        
-        self.enhancement_log.append(audit_entry)
-
-class UniqueMarksAnalyzer:
-    """UNIQUE MARKS ANALYSIS - Scars, moles, tattoos, etc."""
-    
-    def __init__(self):
-        self.feature_detector = cv2.SIFT_create()
-    
-    async def analyze_unique_marks(self, image_path: str, face_data: Dict) -> Dict:
-        """Analyze unique facial marks and features"""
-        print("🔎 ANALYZING UNIQUE FACIAL MARKS...")
-        
-        image = cv2.imread(image_path)
-        if image is None:
-            return {}
-        
-        analysis = {
-            'facial_marks': await self._detect_facial_marks(image, face_data),
-            'ear_characteristics': await self._analyze_ear_characteristics(image, face_data),
-            'hair_characteristics': await self._analyze_hair_characteristics(image, face_data),
-            'skin_texture': await self._analyze_skin_texture(image, face_data),
-            'unique_identifiers': []
-        }
-        
-        # Compile unique identifiers
-        analysis['unique_identifiers'] = self._compile_unique_identifiers(analysis)
-        
-        return analysis
-    
-    async def _detect_facial_marks(self, image: np.ndarray, face_data: Dict) -> Dict:
-        """Detect scars, moles, tattoos"""
-        marks = {
-            'scars': [],
-            'moles': [],
-            'tattoos': [],
-            'other_marks': []
-        }
-        
-        if not face_data.get('dlib_rects'):
-            return marks
-        
-        # Extract face region
-        face_rect = face_data['dlib_rects'][0]
-        face_roi = image[face_rect.top():face_rect.bottom(), face_rect.left():face_rect.right()]
-        
-        if face_roi.size == 0:
-            return marks
-        
-        # Convert to grayscale for analysis
-        gray_face = cv2.cvtColor(face_roi, cv2.COLOR_BGR2GRAY)
-        
-        # Detect dark spots (potential moles)
-        moles = self._detect_dark_spots(gray_face)
-        marks['moles'] = moles
-        
-        # Detect linear features (potential scars)
-        scars = self._detect_linear_features(gray_face)
-        marks['scars'] = scars
-        
-        return marks
-    
-    def _detect_dark_spots(self, gray_image: np.ndarray) -> List[Dict]:
-        """Detect dark spots that could be moles"""
-        # Simple threshold-based detection
-        _, thresh = cv2.threshold(gray_image, 50, 255, cv2.THRESH_BINARY_INV)
-        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        
-        moles = []
-        for contour in contours:
-            area = cv2.contourArea(contour)
-            if 10 < area < 1000:  # Reasonable mole size range
-                x, y, w, h = cv2.boundingRect(contour)
-                moles.append({
-                    'type': 'mole',
-                    'position': (x, y),
-                    'size': area,
-                    'bounding_box': (x, y, w, h)
-                })
-        
-        return moles
-    
-    def _detect_linear_features(self, gray_image: np.ndarray) -> List[Dict]:
-        """Detect linear features that could be scars"""
-        # Edge detection for linear features
-        edges = cv2.Canny(gray_image, 50, 150)
-        lines = cv2.HoughLinesP(edges, 1, np.pi/180, threshold=30, minLineLength=20, maxLineGap=10)
-        
-        scars = []
         if lines is not None:
+            wrinkle_data["total_wrinkles"] = len(lines)
+            lengths = []
+            
             for line in lines:
                 x1, y1, x2, y2 = line[0]
                 length = np.sqrt((x2-x1)**2 + (y2-y1)**2)
-                if length > 15:  # Minimum scar length
-                    scars.append({
-                        'type': 'linear_feature',
-                        'start_point': (x1, y1),
-                        'end_point': (x2, y2),
-                        'length': length
-                    })
+                lengths.append(length)
+                
+                angle = np.abs(np.arctan2(y2-y1, x2-x1) * 180 / np.pi)
+                if angle < 45 or angle > 135:
+                    wrinkle_data["horizontal_wrinkles"] += 1
+                else:
+                    wrinkle_data["vertical_wrinkles"] += 1
+            
+            if lengths:
+                wrinkle_data["average_length"] = float(np.mean(lengths))
         
-        return scars
+        return wrinkle_data
     
-    async def _analyze_ear_characteristics(self, image: np.ndarray, face_data: Dict) -> Dict:
-        """Analyze ear shape and characteristics"""
-        # This would require ear detection and analysis
-        # Simplified implementation
+    def _generate_texture_signature(self, features: Dict) -> str:
+        """Generate unique signature from texture features"""
+        signature_data = json.dumps(features, sort_keys=True)
+        return hashlib.sha256(signature_data.encode()).hexdigest()
+    
+    def _calculate_confidence(self, features: Dict) -> float:
+        """Calculate confidence score for analysis"""
+        confidence = 0.0
+        
+        if features.get('pore_density', 0) > 0:
+            confidence += 0.3
+        
+        if features.get('smoothness', 0) > 0:
+            confidence += 0.3
+        
+        if features.get('wrinkle_pattern', {}).get('total_wrinkles', 0) > 0:
+            confidence += 0.4
+        
+        return min(confidence, 1.0)
+    
+    def compare_face_textures(self, signature1: str, signature2: str) -> Dict:
+        """
+        Compare two facial texture signatures
+        
+        Returns:
+            Dictionary with match confidence and analysis
+        """
+        # Simple Hamming distance for demonstration
+        distance = sum(c1 != c2 for c1, c2 in zip(signature1, signature2))
+        max_distance = len(signature1)
+        similarity = 1 - (distance / max_distance)
+        
         return {
-            'ear_visibility': 'PARTIAL',  # FULL, PARTIAL, HIDDEN
-            'ear_shape': 'unknown',
-            'unique_characteristics': []
+            "similarity_score": similarity,
+            "match_confidence": similarity * 100,
+            "is_match": similarity > 0.85,
+            "comparison_timestamp": datetime.now().isoformat()
         }
+
+# Example usage and testing
+if __name__ == "__main__":
+    analyzer = ForensicAnalyzer()
     
-    async def _analyze_hair_characteristics(self, image: np.ndarray, face_data: Dict) -> Dict:
-        """Analyze hairline and hair characteristics"""
-        return {
-            'hair_visibility': 'VISIBLE',
-            'hairline_shape': 'unknown',  # straight, widow's peak, etc.
-            'hair_color': 'unknown',
-            'hair_texture': 'unknown'
-        }
-    
-    async def _analyze_skin_texture(self, image: np.ndarray, face_data: Dict) -> Dict:
-        """Analyze skin texture
+    # Test with sample data
+    sample_coords = (100, 100, 200, 200)
+    result = analyzer.analyze_skin_texture("sample_face.jpg", sample_coords)
+    print("Forensic Analysis Result:", json.dumps(result, indent=2))

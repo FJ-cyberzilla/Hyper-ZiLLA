@@ -1,0 +1,14 @@
+{
+  "name": "zilla-dam",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "selenium-webdriver": "^4.15.0",
+    "memory-cache": "^0.2.0",
+    "lru-cache": "^10.1.0",
+    "v8-profiler-next": "^1.10.0",
+    "systeminformation": "^5.18.0",
+    "os-utils": "^0.0.14",
+    "pidusage": "^3.0.2"
+  }
+}

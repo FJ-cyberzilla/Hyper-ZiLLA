@@ -1,0 +1,83 @@
+# k8s/cognizilla-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cognizilla
+  namespace: sovereign
+  labels:
+    app: cognizilla
+    monster: quantum
+    owner: fj-cyberzilla
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cognizilla
+  template:
+    metadata:
+      labels:
+        app: cognizilla
+        version: quantum-v1
+    spec:
+      serviceAccountName: cognizilla-sa
+      containers:
+      - name: cognizilla-monster
+        image: fjcyberzilla/cognizilla:quantum-latest
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 8443
+          name: https
+        env:
+        - name: COGNIZILLA_MODE
+          value: "sovereign"
+        - name: QUANTUM_ENTANGLEMENT
+          valueFrom:
+            secretKeyRef:
+              name: cognizilla-secrets
+              key: quantum-key
+        - name: FJ_CYBERZILLA_SIGNATURE
+          valueFrom:
+            secretKeyRef:
+              name: cognizilla-secrets
+              key: fj-signature
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cognizilla-service
+  namespace: sovereign
+spec:
+  selector:
+    app: cognizilla
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  - name: https
+    port: 443
+    targetPort: 8443
+  type: LoadBalancer

@@ -1,0 +1,87 @@
+# Security Ignore File
+# Files and patterns that should be ignored by security scanners
+# but are necessary for development
+
+# Build artifacts (false positives)
+/target/debug/
+/target/release/
+**/__pycache__/
+
+# Test files with intentional vulnerabilities
+/tests/
+/test-data/
+/fixtures/
+
+# Documentation examples
+/examples/
+/demos/
+
+# Configuration templates (not actual secrets)
+/config/templates/
+*.template
+
+# Mock data for testing
+/mocks/
+/mock-data/
+
+# Vendor directories (third-party code)
+/vendor/
+/third_party/
+
+# Generated documentation
+/docs/_build/
+/docs/generated/
+
+# Temporary test files
+/tmp/test-*
+/temp/*
+
+# Log files from testing
+/test.log
+/debug.log
+
+# Code coverage files
+*.profraw
+*.gcda
+*.gcno
+
+# These are intentional for security testing
+# Penetration testing payloads
+/payloads/
+/exploits/
+
+# Password lists for testing
+/wordlists/
+/rockyou.txt
+
+# SSL certificates for testing
+/ssl/test-certificates/
+*.pem
+*.key
+*.crt
+
+# Network capture files
+*.pcap
+*.pcapng
+
+# These contain intentional vulnerabilities for educational purposes
+/vulnerable-code/
+/security-demos/
+
+# False positive patterns for various security tools
+
+# SAST false positives
+# These are intentional in security tools
+/src/exploits/
+/src/payloads/
+
+# These are test credentials
+/test-credentials.txt
+/dummy-secrets.env
+
+# Binary files that are intentionally included
+/tools/
+/bin/
+
+# These are safe for this project
+Cargo.lock

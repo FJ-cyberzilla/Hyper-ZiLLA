@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zilla-dam-core
+  labels:
+    app: zilla-dam
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: zilla-dam
+  template:
+    metadata:
+      labels:
+        app: zilla-dam
+    spec:
+      containers:
+      - name: zilla-dam
+        image: zilla-dam:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: QUANTUM_LOCK
+          value: "enabled"
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "1"
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zilla-dam-service
+spec:
+  selector:
+    app: zilla-dam
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: LoadBalancer

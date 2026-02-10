@@ -1,0 +1,166 @@
+<!-- ~/HyperZilla/COMMAND_CENTER/templates/facial_intel_panel.html -->
+<div id="facial-intel-panel" class="content-panel">
+    <div class="panel-header">
+        <h2><i class="fas fa-user-secret"></i> FACIAL INTELLIGENCE IDENTIFICATION</h2>
+        <div class="panel-actions">
+            <!-- The button for starting/stopping analysis -->
+            <button class="btn-primary" id="analyzeFaceButton">
+                <i class="fas fa-search"></i> Start Analysis
+            </button>
+            <button class="btn-secondary" onclick="showFacialDatabase()">
+                <i class="fas fa-database"></i> Face Database
+            </button>
+        </div>
+    </div>
+
+    <div class="facial-intel-grid">
+        <!-- IMAGE UPLOAD AREA -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Upload Target Image</h3>
+            </div>
+            <div class="card-body">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p>Drag & drop face image or click to browse</p>
+                    <input type="file" id="faceImageInput" accept="image/*" hidden>
+                    <button class="btn-secondary" onclick="document.getElementById('faceImageInput').click()">
+                        Select Image
+                    </button>
+                </div>
+                <div id="imagePreview" class="image-preview" style="display: none;">
+                    <img id="previewImage" src="" alt="Preview">
+                    <div class="preview-actions">
+                        <button class="btn-danger" onclick="clearImage()">
+                            <i class="fas fa-times"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENHANCEMENT DATA -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Enhancement Data (Optional)</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="knownEmail">Known Email:</label>
+                    <input type="email" id="knownEmail" class="form-control" placeholder="email@domain.com">
+                </div>
+                <div class="form-group">
+                    <label for="knownUsername">Known Username:</label>
+                    <input type="text" id="knownUsername" class="form-control" placeholder="@username">
+                </div>
+                <div class="form-group">
+                    <label for="knownLocation">Known Location:</label>
+                    <input type="text" id="knownLocation" class="form-control" placeholder="City, Country">
+                </div>
+                <div class="form-group">
+                    <label>Search Depth:</label>
+                    <select id="searchDepth" class="form-control">
+                        <option value="BASIC">Basic Search</option>
+                        <option value="STANDARD" selected>Standard Analysis</option>
+                        <option value="DEEP">Deep Investigation</option>
+                        <option value="COMPREHENSIVE">Comprehensive Intelligence</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIDEO FEED AND OVERLAY CANVAS FOR REAL-TIME ANALYSIS -->
+        <div class="card full-width video-analysis-card">
+            <div class="card-header">
+                <h3>Live Feed Analysis</h3>
+            </div>
+            <div class="card-body">
+                <div style="position: relative; width: fit-content; margin: 0 auto;">
+                    <!-- Video feed from webcam -->
+                    <video id="videoFeed" autoplay playsinline muted style="width: 640px; height: 480px; display: block;"></video>
+                    <!-- Canvas to overlay detection boxes -->
+                    <canvas id="canvasOverlay" style="position: absolute; top: 0; left: 0; width: 640px; height: 480px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYSIS RESULTS TABBED VIEW -->
+        <div class="card full-width">
+            <div class="card-header">
+                <h3>Facial Intelligence Results</h3>
+            </div>
+            <div class="card-body">
+                <div class="results-tabs">
+                    <button class="tab-btn active" data-tab="facial-summary">Summary</button>
+                    <button class="tab-btn" data-tab="facial-matches">Database Matches</button>
+                    <button class="tab-btn" data-tab="facial-analysis">Face Analysis</button>
+                    <button class="tab-btn" data-tab="facial-osint">OSINT Results</button>
+                </div>
+                
+                <div id="facial-results-content" class="results-content">
+                    <!-- Summary Tab -->
+                    <div id="facial-summary-tab" class="tab-content active">
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <h4>Face Detection</h4>
+                                <div id="faceDetectionStatus" class="status-pending">
+                                    <i class="fas fa-question-circle"></i> Waiting for analysis
+                                </div>
+                            </div>
+                            <div class="summary-item">
+                                <h4>Confidence Score</h4>
+                                <div id="confidenceScore" class="score-pending">--%</div>
+                            </div>
+                            <div class="summary-item">
+                                <h4>Best Match</h4>
+                                <div id="bestMatch" class="match-pending">No matches yet</div>
+                            </div>
+                            <div class="summary-item full-width">
+                                <h4>Actionable Intelligence</h4>
+                                <div id="actionableInsights" class="insights-pending">
+                                    Upload an image or start live analysis to see insights.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Database Matches Tab -->
+                    <div id="facial-matches-tab" class="tab-content">
+                        <div id="matchesList" class="matches-list">
+                            <!-- Matches will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Face Analysis Tab -->
+                    <div id="facial-analysis-tab" class="tab-content">
+                        <div class="analysis-grid">
+                            <div class="analysis-item">
+                                <h5>Demographics</h5>
+                                <div id="demographicsAnalysis">Pending...</div>
+                            </div>
+                            <div class="analysis-item">
+                                <h5>Emotional State</h5>
+                                <div id="emotionalAnalysis">Pending...</div>
+                            </div>
+                            <div class="analysis-item">
+                                <h5>Unique Features</h5>
+                                <div id="uniqueFeatures">Pending...</div>
+                            </div>
+                            <div class="analysis-item">
+                                <h5>Image Quality</h5>
+                                <div id="imageQuality">Pending...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OSINT Results Tab -->
+                    <div id="facial-osint-tab" class="tab-content">
+                        <div id="osintResults" class="osint-results">
+                            <!-- OSINT data will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

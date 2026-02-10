@@ -1,9 +1,10 @@
 # ~/HyperZilla/OPERATIONS_ARM/AGENT_SYSTEM/agent_integrity.py
-import hashlib
+
 import asyncio
-from typing import Dict, List
-import psutil
-import socket
+from typing import Dict
+
+
+from .capability_registry import CapabilityRegistry
 
 class AgentIntegrityMonitor:
     def __init__(self):

@@ -1,0 +1,17 @@
+# Create as a shell script
+mkdir -p config
+cat > config/configure << 'EOF'
+#!/bin/bash
+# Zilla-Dam Configuration Script
+
+echo "🔧 Loading configuration..."
+export NODE_OPTIONS="--max-old-space-size=4096"
+export APP_ENV="${APP_ENV:-production}"
+
+echo "✅ Configuration loaded:"
+echo "   - Node.js memory: 4GB"
+echo "   - Environment: $APP_ENV"
+EOF
+
+# Make it executable
+chmod +x config/configure

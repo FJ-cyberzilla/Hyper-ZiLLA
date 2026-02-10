@@ -1,0 +1,12 @@
+# False positives in Rust packages
+CVE-2023-XXXXX
+GHSA-xxxx-xxxx-xxxx
+
+# Accepted risks
+CVE-2021-XXXXX # This vulnerability is not exploitable in our context
+
+# Development dependencies only used in build
+CVE-2022-YYYYY
+
+# These CVEs are in test dependencies
+CVE-2020-ZZZZZ

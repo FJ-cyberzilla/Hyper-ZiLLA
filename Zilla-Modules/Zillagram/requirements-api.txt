@@ -1,0 +1,17 @@
+# requirements-api.txt
+
+# Include all base requirements
+-r requirements.txt
+
+# API Specific
+fastapi-limiter==0.1.5
+slowapi==0.1.9
+python-rate-limiter==2.3.0
+
+# Security Enhancements
+helmet==0.2.0
+secure==0.3.1
+
+# API Documentation
+fastapi-users==10.3.1
+fastapi-pagination==0.12.0
