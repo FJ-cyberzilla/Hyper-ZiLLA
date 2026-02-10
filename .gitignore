@@ -22,3 +22,9 @@ Thumbs.db
 
 # Environment
 .env
+*.cpython-*.so
+*.so
+*.pyc
+*.pxd
+*.pyx
+__pycache__/
