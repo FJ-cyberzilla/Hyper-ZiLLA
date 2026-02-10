@@ -13,5 +13,5 @@ helmet==0.2.0
 secure==0.3.1
 
 # API Documentation
-fastapi-users==10.3.1
+fastapi-users==15.0.2
 fastapi-pagination==0.12.0
