@@ -28,3 +28,38 @@ Thumbs.db
 *.pxd
 *.pyx
 __pycache__/
+.venv/
+env/
+/target/
+**/target/
+/build/
+**/build/
+CMakeFiles/
+**/CMakeFiles/
+/target/
+**/target/
+/target/
+**/target/
+
+# ========== RUST ==========
+# Build outputs
+/target/
+**/target/
+Cargo.lock
+
+# Rust incremental compilation
+**/incremental/
+
+# Compiled libraries
+*.rlib
+*.rmeta
+*.so
+*.dll
+*.exe
+
+# Dependency info
+*.d
+
+# Rust cache
+.cargo/
+**/.cargo/
