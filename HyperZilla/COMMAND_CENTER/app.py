@@ -51,7 +51,9 @@ def create_app():
         db.create_all()
 
     with app.app_context():
-        get_ai_systems()
+        director_ai, _, ai_available = get_ai_systems()
+        if director_ai and ai_available:
+            director_ai.initialize_system()
 
     @app.route('/')
     def dashboard():

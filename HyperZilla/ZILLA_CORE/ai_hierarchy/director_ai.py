@@ -17,7 +17,7 @@ class DirectorAI:
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.system_status = "initializing"
+        self.system_status = "operational"
         self.start_time = datetime.now()
         self.loaded_modules = ["Core AI Engine", "Threat Intelligence Processor", "OSINT Data Harvester"]
         self.current_active_modules = ["Core AI Engine"]

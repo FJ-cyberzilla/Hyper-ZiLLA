@@ -71,6 +71,16 @@ def main():
     logger.info(f"Starting Hyper-ZiLLA Proprietary AI Platform in {args.mode} mode")
     logger.info("All AI systems: 100% Custom Hyper-ZiLLA Technology")
     
+    # If HZ_DATABASE_URL is set to the default PostgreSQL example, remove it
+    # to force SQLite for development unless a custom HZ_DATABASE_URL is explicitly provided
+    if os.environ.get('HZ_DATABASE_URL') == 'postgresql://hyperzilla:hyperzilla-password@localhost/hyperzilla':
+        del os.environ['HZ_DATABASE_URL']
+
+    # Ensure HZ_DATABASE_URL is set for development if not already present
+    if not os.environ.get('HZ_DATABASE_URL'):
+        from config.settings import BaseConfig
+        os.environ['HZ_DATABASE_URL'] = f'sqlite:///{BaseConfig.DATA_DIR}/hyperzilla_dev.db'
+    
     try:
         if args.mode == 'web':
             logger.info(f"Starting proprietary AI web interface on {args.host}:{args.port}")

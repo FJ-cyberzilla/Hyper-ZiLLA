@@ -1,0 +1,99 @@
+2026-01-03 07:17:56,503 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in test mode
+2026-01-03 07:17:56,504 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 07:17:56,504 - __main__ - INFO - Running proprietary AI system activation test
+2026-01-03 07:17:56,504 - HyperZilla.OPERATIONS_ARM.activation_test - INFO - 🧪 Starting Hyper-ZiLLA Proprietary AI System Test
+2026-01-03 07:17:56,504 - HyperZilla.OPERATIONS_ARM.activation_test - INFO - 🔧 Running _test_core_ai_modules...
+2026-01-03 07:17:57,005 - HyperZilla.OPERATIONS_ARM.activation_test - INFO - ✅ _test_core_ai_modules: PASSED
+2026-01-03 07:17:57,005 - HyperZilla.OPERATIONS_ARM.activation_test - INFO - 🔧 Running _test_intelligence_arm...
+2026-01-03 07:17:57,506 - HyperZilla.OPERATIONS_ARM.activation_test - INFO - ✅ _test_intelligence_arm: PASSED
+2026-01-03 07:17:57,507 - HyperZilla.OPERATIONS_ARM.activation_test - INFO - 🔧 Running _test_operations_arm...
+2026-01-03 07:17:58,007 - HyperZilla.OPERATIONS_ARM.activation_test - INFO - ✅ _test_operations_arm: PASSED
+2026-01-03 07:17:58,008 - HyperZilla.OPERATIONS_ARM.activation_test - INFO - 🔧 Running _test_security_systems...
+2026-01-03 07:17:58,308 - HyperZilla.OPERATIONS_ARM.activation_test - INFO - ✅ _test_security_systems: PASSED
+2026-01-03 07:17:58,309 - HyperZilla.OPERATIONS_ARM.activation_test - INFO - 🔧 Running _test_performance...
+2026-01-03 07:17:58,510 - HyperZilla.OPERATIONS_ARM.activation_test - INFO - ✅ _test_performance: PASSED
+2026-01-03 07:19:06,430 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in web mode
+2026-01-03 07:19:06,431 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 07:19:06,431 - __main__ - INFO - Starting proprietary AI web interface on 127.0.0.1:5000
+2026-01-03 07:19:06,534 - __main__ - ERROR - Proprietary AI system error: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-01-03 07:19:27,329 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in web mode
+2026-01-03 07:19:27,329 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 07:19:27,329 - __main__ - INFO - Starting proprietary AI web interface on 127.0.0.1:5000
+2026-01-03 07:19:27,404 - __main__ - ERROR - Proprietary AI system error: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-01-03 07:20:04,768 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in web mode
+2026-01-03 07:20:04,768 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 07:20:04,768 - __main__ - INFO - Starting proprietary AI web interface on 127.0.0.1:5000
+2026-01-03 07:20:04,849 - __main__ - ERROR - Proprietary AI system error: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-01-03 07:21:06,630 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in web mode
+2026-01-03 07:21:06,630 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 07:21:06,630 - __main__ - INFO - Starting proprietary AI web interface on 127.0.0.1:5000
+2026-01-03 07:21:06,661 - __main__ - ERROR - Proprietary AI system error: (sqlite3.OperationalError) unable to open database file
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-01-03 07:21:34,539 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in web mode
+2026-01-03 07:21:34,540 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 07:21:34,540 - __main__ - INFO - Starting proprietary AI web interface on 127.0.0.1:5000
+2026-01-03 07:21:34,605 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-03 07:21:34,605 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-01-03 09:06:40,115 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in web mode
+2026-01-03 09:06:40,116 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 09:06:40,116 - __main__ - INFO - Starting proprietary AI web interface on 127.0.0.1:5000
+2026-01-03 09:06:40,172 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-03 09:06:40,172 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-01-03 09:10:23,595 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in web mode
+2026-01-03 09:10:23,595 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 09:10:23,595 - __main__ - INFO - Starting proprietary AI web interface on 127.0.0.1:5000
+2026-01-03 09:10:23,645 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-03 09:10:23,645 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-01-03 09:15:40,850 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in web mode
+2026-01-03 09:15:40,850 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 09:15:40,850 - __main__ - INFO - Starting proprietary AI web interface on 127.0.0.1:5000
+2026-01-03 09:15:40,901 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-03 09:15:40,902 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-01-03 10:22:37,228 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in web mode
+2026-01-03 10:22:37,229 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 10:22:37,229 - __main__ - INFO - Starting proprietary AI web interface on 127.0.0.1:5000
+2026-01-03 10:22:37,324 - __main__ - ERROR - Proprietary AI system error: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-01-03 10:22:52,176 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in web mode
+2026-01-03 10:22:52,177 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 10:22:52,177 - __main__ - INFO - Starting proprietary AI web interface on 127.0.0.1:5000
+2026-01-03 10:22:52,274 - __main__ - ERROR - Proprietary AI system error: (psycopg2.OperationalError) connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-01-03 10:23:04,590 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in web mode
+2026-01-03 10:23:04,590 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 10:23:04,593 - __main__ - INFO - Starting proprietary AI web interface on 127.0.0.1:5000
+2026-01-03 10:23:04,623 - HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai - INFO - 🔄 Initializing Hyper-ZiLLA Proprietary AI System
+2026-01-03 10:23:04,648 - HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai - INFO - Event logged: System Initialization - System is starting up.
+2026-01-03 10:23:04,649 - HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai - INFO - ⚙️ Loading AI configurations and modules...
+2026-01-03 10:23:05,158 - HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai - INFO - Event logged: System Initialization - AI configurations and modules loaded.
+2026-01-03 10:23:05,158 - HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai - INFO - ✅ Hyper-ZiLLA AI System initialized successfully
+2026-01-03 10:23:05,165 - HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai - INFO - Event logged: System Initialization - System is now operational.
+2026-01-03 10:23:05,210 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-03 10:23:05,210 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-01-03 10:25:18,619 - __main__ - INFO - Starting Hyper-ZiLLA Proprietary AI Platform in web mode
+2026-01-03 10:25:18,619 - __main__ - INFO - All AI systems: 100% Custom Hyper-ZiLLA Technology
+2026-01-03 10:25:18,621 - __main__ - INFO - Starting proprietary AI web interface on 127.0.0.1:5000
+2026-01-03 10:25:18,655 - HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai - INFO - 🔄 Initializing Hyper-ZiLLA Proprietary AI System
+2026-01-03 10:25:18,665 - HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai - INFO - Event logged: System Initialization - System is starting up.
+2026-01-03 10:25:18,665 - HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai - INFO - ⚙️ Loading AI configurations and modules...
+2026-01-03 10:25:19,173 - HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai - INFO - Event logged: System Initialization - AI configurations and modules loaded.
+2026-01-03 10:25:19,174 - HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai - INFO - ✅ Hyper-ZiLLA AI System initialized successfully
+2026-01-03 10:25:19,181 - HyperZilla.ZILLA_CORE.ai_hierarchy.director_ai - INFO - Event logged: System Initialization - System is now operational.

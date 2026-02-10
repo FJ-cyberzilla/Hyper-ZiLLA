@@ -25,7 +25,6 @@ class DevelopmentConfig(BaseConfig):
     """Development configuration"""
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('HZ_DATABASE_URL', f'sqlite:///{BaseConfig.DATA_DIR}/hyperzilla_dev.db')
-
 class TestingConfig(BaseConfig):
     """Testing configuration"""
     TESTING = True
