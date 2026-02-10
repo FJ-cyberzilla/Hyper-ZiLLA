@@ -1,98 +1,24 @@
-# ========== GLOBAL IGNORES ==========
-# These apply to ALL directories
+# Dependencies
+vendor/
+node_modules/
+__pycache__/
+venv/
+env/
+target/
+build/
+dist/
 
-# Dependency directories
-**/vendor/
-**/node_modules/
-**/__pycache__/
-**/venv/
-**/env/
-**/.venv/
-**/target/
-**/build/
-**/dist/
-**/bin/
-**/out/
-**/pkg/
-
-# Compiled files
-*.pyc
-*.pyo
-*.pyd
-*.so
-*.o
-*.a
-*.exe
-*.dll
-*.class
-*.jar
-*.war
-*.ear
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*.sublime-*
+# Large files
+*.zip
+*.tar.gz
+*.h5
+*.pkl
+*.model
+*.weights
 
 # OS
 .DS_Store
 Thumbs.db
-desktop.ini
 
 # Environment
 .env
-.env.*
-.secrets/
-*.secret
-
-# Logs
-*.log
-logs/
-
-# Temporary
-tmp/
-temp/
-*.tmp
-*.temp
-
-# ========== GO SPECIFIC ==========
-# Already covered by **/vendor/ but being explicit
-vendor/
-go.sum
-*.test
-*.prof
-
-# ========== PYTHON SPECIFIC ==========
-*.egg-info/
-.installed.cfg
-*.egg
-.pytest_cache/
-.coverage
-htmlcov/
-__pycache__/
-
-# ========== NODE SPECIFIC ==========
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.yarn/
-.yarn-cache/
-
-# ========== RUST SPECIFIC ==========
-Cargo.lock
-*.rs.bk
-
-# ========== C/C++ SPECIFIC ==========
-*.ko
-*.obj
-*.elf
-*.ilk
-*.map
-*.exp
-*.i
-*.ii
-
-# ========== YOUR PROJECT STRUCTURE ==========
-# Add any project-specific ignores here
