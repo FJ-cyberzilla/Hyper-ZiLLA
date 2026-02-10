@@ -24,7 +24,7 @@ flower==2.0.0
 prometheus-client==0.17.0
 
 # === Async Networking ===
-aiohttp==3.12.14
+aiohttp==3.13.3
 
 # === Testing ===
 pytest==7.4.0
